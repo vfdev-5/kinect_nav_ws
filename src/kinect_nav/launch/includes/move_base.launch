@@ -1,0 +1,31 @@
+<launch>
+
+    <!--<arg name="laserscan_frame" />-->
+    <!--<arg name="laserscan_topic" />-->
+    <!--<arg name="depth_points" />-->
+    <!--<arg name="depth_points_frame" />-->
+    <!--<arg name="base_kinect_link" /> -->
+
+    <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+
+        <rosparam file="$(find kinect_nav)/params/costmap_common_params.yaml" command="load" ns="global_costmap" />
+        <rosparam file="$(find kinect_nav)/params/costmap_common_params.yaml" command="load" ns="local_costmap" />
+
+        <rosparam file="$(find kinect_nav)/params/local_costmap_params.yaml" command="load" />
+        <rosparam file="$(find kinect_nav)/params/global_costmap_params.yaml" command="load" />
+
+        <rosparam file="$(find kinect_nav)/params/base_local_planner_params.yaml" command="load" />
+        <rosparam file="$(find kinect_nav)/params/move_base_params.yaml" command="load" />
+
+        <param name="base_global_planner" type="string" value="navfn/NavfnROS" />
+        <param name="base_local_planner" value="base_local_planner/TrajectoryPlannerROS"/>
+
+        <!--<param name="base_frame" value="$(arg base_kinect_link)"/>-->
+        <!--<param name="global_costmap/scan_frame" value="$(arg laserscan_frame)"/>-->
+        <!--<param name="local_costmap/laser_scan/scan_frame" value="$(arg laserscan_frame)"/>-->
+        <!--<remap from="global_costmap/scan" to="$(arg laserscan_topic)"/>-->
+        <!--<remap from="local_costmap/scan" to="$(arg laserscan_topic)"/>-->
+
+    </node>
+
+</launch>

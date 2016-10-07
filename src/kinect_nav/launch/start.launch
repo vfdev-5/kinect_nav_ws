@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<!--
+    Launch file to start all
+-->
+<launch>
+
+    <arg name="localization" value="true"/>
+
+    <!-- Setup default topic names from Kinect:  -->
+    <arg name="camera_name" value="camera"/>
+    <arg name="rgb_image" value="/$(arg camera_name)/rgb/image_rect_color"/>
+    <arg name="rgb_camera_info" value="/$(arg camera_name)/rgb/camera_info"/>
+    <arg name="depth_image" value="/$(arg camera_name)/depth_registered/image_raw"/>
+    <arg name="depth_camera_info" value="/$(arg camera_name)/depth_registered/camera_info"/>
+    <arg name="base_kinect_link" value="$(arg camera_name)_link" /> <!-- tf coordinate system name from Kinect -->
+    <arg name="laserscan_topic" value="/$(arg camera_name)/laserscan"/>
+    <arg name="laserscan_frame" value="$(arg base_kinect_link)"/>
+    <arg name="depth_points" value="/$(arg camera_name)/depths/points"/>
+    <arg name="depth_points_frame" value="/$(arg camera_name)_depth_frame"/>
+
+
+    <!-- ********************************************************************* -->
+    <!--  Start sensors  -->
+    <!-- ********************************************************************* -->
+    <include file="$(find kinect_nav)/launch/includes/configuration.launch">
+        <arg name="rgb_image" value="$(arg rgb_image)"/>
+        <arg name="rgb_camera_info" value="$(arg rgb_camera_info)"/>
+        <arg name="depth_image" value="$(arg depth_image)"/>
+        <arg name="depth_camera_info" value="$(arg depth_camera_info)"/>
+        <arg name="base_kinect_link" value="$(arg base_kinect_link)" />
+        <arg name="laserscan_topic" value="$(arg laserscan_topic)"/>
+    </include>
+
+    <!-- ********************************************************************* -->
+    <!--  Start mapping  -->
+    <!-- ********************************************************************* -->
+    <include file="$(find kinect_nav)/launch/includes/rtabmapping.launch">
+        <arg name="localization" value="$(arg localization)"/>
+        <arg name="rgb_image" value="$(arg rgb_image)"/>
+        <arg name="rgb_camera_info" value="$(arg rgb_camera_info)"/>
+        <arg name="depth_image" value="$(arg depth_image)"/>
+        <arg name="depth_camera_info" value="$(arg depth_camera_info)"/>
+        <arg name="base_link" value="$(arg base_kinect_link)" />
+        <arg name="laserscan_topic" value="$(arg laserscan_topic)"/>
+        <arg name="database_path" value="$(find kinect_nav)/maps/_map.db"/>
+    </include>
+
+    <!-- ********************************************************************* -->
+    <!--  Start move_base  -->
+    <!-- ********************************************************************* -->
+    <!--<include if="$(arg localization)" file="$(find kinect_nav)/launch/includes/move_base.launch">-->
+        <!--<arg name="laserscan_topic" value="$(arg laserscan_topic)"/>-->
+        <!--<arg name="laserscan_frame" value="$(arg base_kinect_link)" />-->
+        <!--<arg name="depth_points" value="$(arg depth_points)"/>-->
+        <!--<arg name="depth_points_frame" value="$(arg depth_points_frame)"/>-->
+        <!--<arg name="base_kinect_link" value="$(arg base_kinect_link)" /> &lt;!&ndash; tf coordinate system name from Kinect &ndash;&gt;-->
+    <!--</include>-->
+
+    <!-- ********************************************************************* -->
+    <!--  Start rviz  -->
+    <!-- ********************************************************************* -->
+    <node if="$(arg localization)" name="rviz" pkg="rviz" type="rviz" args="-d $(find kinect_nav)/includes/navigation.rviz " />
+    <node unless="$(arg localization)" name="rviz" pkg="rviz" type="rviz" args="-d $(find kinect_nav)/includes/mapping.rviz " />
+
+</launch>

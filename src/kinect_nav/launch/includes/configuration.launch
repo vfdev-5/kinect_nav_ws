@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+<!--
+    Navigation configuration :
+
+    Following topic are published :
+     - /$(arg camera_name)/rgb/image_rect_color               (from Kinect)
+     - /$(arg camera_name)/rgb/camera_info                    (from Kinect)
+     - /$(arg camera_name)/depth_registered/image_raw         (from Kinect)
+     - /$(arg camera_name)/depth_registered/camera_info       (from Kinect)
+     - /$(arg camera_name)/laserscan                          (from Kinect -> depthimage_to_laserscan)
+     - /tf
+        /$(arg camera_name)_link
+        /$(arg camera_name)_rgb_optical_frame
+        /$(arg camera_name)_depth_optical_frame
+        /$(arg camera_name)_rgb_frame
+        /$(arg camera_name)_depth_frame
+
+-->
+<launch>
+
+    <!-- Setup default topic names from Kinect:  -->
+    <arg name="camera_name" default="camera"/>
+    <arg name="rgb_image" default="/$(arg camera_name)/rgb/image_rect_color"/>
+    <arg name="rgb_camera_info" default="/$(arg camera_name)/rgb/camera_info"/>
+    <arg name="depth_image" default="/$(arg camera_name)/depth_registered/image_raw"/>
+    <arg name="depth_camera_info" default="/$(arg camera_name)/depth_registered/camera_info"/>
+    <arg name="base_kinect_link" default="$(arg camera_name)_link" /> <!-- tf coordinate system name from Kinect -->
+    <arg name="laserscan_topic" default="/$(arg camera_name)/laserscan"/>
+
+    <!-- 
+        * depthimage_to_laserscan output frame id = The frame id of the laser scan. For point clouds coming from an "optical" frame with Z forward, this value should be set to the corresponding frame with X forward and Z up. 
+    -->
+    <arg name="laserscan_frame" default="$(arg base_kinect_link)"/>
+
+    <!-- ********************************************************************* -->
+    <!--   Setup sensors : image from Kinect, depth from Kinect, laserscan     -->
+    <!-- ********************************************************************* -->
+
+    <!-- START Kinect -->
+    <!-- https://github.com/ros-drivers/freenect_stack/blob/master/freenect_launch/launch/freenect.launch -->
+    <include file="$(find freenect_launch)/launch/freenect.launch">
+        <arg name="camera" value="$(arg camera_name)"/>
+        <arg name="depth_registration" value="true" />
+        <arg name="data_skip" value="1" />
+        <arg name="num_worker_threads" value="4" />
+        <arg name="publish_tf" value="true" />
+        
+        <!-- Calibration files -->
+        <!--arg name="rgb_camera_info_url"   value="" /-->
+        <!--arg name="depth_camera_info_url" value="" /-->
+
+        <!-- Processing Modules -->
+        <arg name="rgb_processing"                  value="true" />
+        <arg name="ir_processing"                   value="true" />
+        <arg name="depth_processing"                value="true" />
+        <arg name="depth_registered_processing"     value="true" />
+        <arg name="disparity_processing"            value="false" />
+        <arg name="disparity_registered_processing" value="false" />
+        <arg name="hw_registered_processing"        value="false" />
+        <arg name="sw_registered_processing"        value="false" />
+    </include>
+
+    <!--RGBD to LaserScan-->
+    <node pkg="depthimage_to_laserscan"
+          name="depthimage_to_laserscan"
+          type="depthimage_to_laserscan"
+          output="screen">
+        <remap from="image" to="$(arg depth_image)" />
+        <remap from="camera_info" to="$(arg depth_camera_info)" />
+        <remap from="scan" to="$(arg laserscan_topic)" />
+
+        <!-- laser scan height = The number of pixels rows to use to generate the laserscan.
+        For each column, the scan will return the minimum value for those pixels centered vertically in the image.    -->
+        <param name="scan_height" value="10"/>
+        <param name="output_frame_id" value="$(arg laserscan_frame)"/>
+        <param name="_image_transport" value="compressed"/>
+    </node>
+
+    <!-- ********************************************************************* -->
+    <!--  Setup visual odometry : from Kinect (conf_a), from PiCamera (conf_b) -->
+    <!-- ********************************************************************* -->
+    <!-- see http://wiki.ros.org/rtabmap_ros#rgbd_odometry  -->
+    <!-- rosrun rtabmap_ros rgbd_odometry - -params -->
+    <node pkg="rtabmap_ros" type="rgbd_odometry" name="rgbd_odometry" output="screen">
+        <remap from="rgb/image"       to="$(arg rgb_image)"/>
+        <remap from="rgb/camera_info" to="$(arg rgb_camera_info)"/>
+        <remap from="depth/image"     to="$(arg depth_image)"/>
+        <param name="Reg/Force3DoF" type="string" value="true"/> <!-- (x, y, theta) instead of (x, y, z, roll, pitch, yaw) -->
+        <param name="frame_id" type="string" value="$(arg base_kinect_link)"/>
+    </node>
+
+</launch>
