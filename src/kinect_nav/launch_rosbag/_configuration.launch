@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<!--
+    Simulation configuration :
+-->
+<launch>
+
+    <!-- Ros bag file -->
+    
+    <!--    
+        Produced from this : https://docs.google.com/uc?id=0B46akLGdg-uadXhLeURiMTBQU28&export=download
+    
+        rosbag filter ~/Downloads/demo_mapping.bag ~/Downloads/only_rgbd_tf.bag "topic == 'data_throttled_image/compressed' or topic == 'data_throttled_camera_info' or topic == 'data_throttled_image_depth/compressedDepth' or (topic =='/tf' and not 'odom' in m.transforms[0].header.frame_id)" /home/osboxes/Downloads/only_rgbd_tf.bag  
+    
+    -->
+    
+    <arg name="bag_file" default="/home/osboxes/Downloads/only_rgbd_tf.bag"/>
+    
+    <!-- Choose valid topic names from Kinect:  -->
+    <arg name="rgb_image" default="/data_throttled_image"/>
+    <arg name="rgb_camera_info" default="/data_throttled_camera_info"/>
+    <arg name="depth_image" default="/data_throttled_image_depth"/>
+    <arg name="depth_camera_info" default="/data_throttled_camera_info"/>
+    <arg name="base_kinect_link" default="openni_base_link" />
+    <arg name="laserscan_topic" default="/camera/laserscan"/>
+    <arg name="laserscan_frame" default="openni_camera_link"/>
+   
+    
+    <!-- ********************************************************************* -->
+    <!--  Play ROS bag -->
+    <!-- ********************************************************************* -->
+
+    <param name="use_sim_time" value="true"/>
+    <node pkg="rosbag" 
+          type="play" 
+          name="player" 
+          output="screen" 
+          args="--clock -s 27 $(arg bag_file) ">
+    </node>
+    
+<!--   
+        Published topics : 
+           /data_throttled_camera_info
+           /data_throttled_image/compressed
+           /data_throttled_image_depth/compressedDept
+           /tf (without odom)
+-->         
+  
+    <!-- Uncompress data -->
+    <node name="republish_depth" 
+          type="republish" 
+          pkg="image_transport" 
+          args="compressedDepth in:=$(arg depth_image) raw out:=$(arg depth_image)_relay" />
+
+    <!-- Uncompress data -->
+    <node name="republish_rgb" 
+          type="republish" 
+          pkg="image_transport" 
+          args="compressed in:=$(arg rgb_image) raw out:=$(arg rgb_image)_relay" />
+
+              
+    <!--RGBD to LaserScan-->
+    <node pkg="depthimage_to_laserscan"
+          name="depthimage_to_laserscan"
+          type="depthimage_to_laserscan"
+          output="screen">
+        <remap from="image" to="$(arg depth_image)_relay" />
+        <remap from="camera_info" to="$(arg depth_camera_info)" />
+        <remap from="scan" to="$(arg laserscan_topic)" />
+
+        <param name="scan_height" value="10"/>
+        <param name="output_frame_id" value="$(arg laserscan_frame)"/>
+        <param name="_image_transport" value="compressed"/>
+    </node>
+
+    <!-- ********************************************************************* -->
+    <!--  Setup visual odometry -->
+    <!-- ********************************************************************* -->
+    <!-- see http://wiki.ros.org/rtabmap_ros#rgbd_odometry  -->
+
+    <node pkg="rtabmap_ros" type="rgbd_odometry" name="rgbd_odometry" output="screen">
+      <remap from="rgb/image"       to="$(arg rgb_image)_relay"/>
+      <remap from="rgb/camera_info" to="$(arg rgb_camera_info)"/>
+      <remap from="depth/image"     to="$(arg depth_image)_relay"/>
+      <param name="Reg/Force3DoF" type="string" value="true"/> <!-- (x, y, theta) instead of (x, y, z, roll, pitch, yaw) -->
+
+      <param name="frame_id" type="string" value="base_footprint"/> <!-- The frame attached to the mobile base. -->
+    </node>
+
+
+</launch>

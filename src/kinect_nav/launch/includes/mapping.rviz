@@ -3,9 +3,11 @@ Panels:
     Help Height: 78
     Name: Displays
     Property Tree Widget:
-      Expanded: ~
-      Splitter Ratio: 0.526846
-    Tree Height: 689
+      Expanded:
+        - /Global Options1
+        - /Map1
+      Splitter Ratio: 0.526845992
+    Tree Height: 512
   - Class: rviz/Selection
     Name: Selection
   - Class: rviz/Tool Properties
@@ -14,7 +16,7 @@ Panels:
       - /2D Nav Goal1
       - /Publish Point1
     Name: Tool Properties
-    Splitter Ratio: 0.588679
+    Splitter Ratio: 0.588679016
   - Class: rviz/Views
     Expanded:
       - /Current View1
@@ -34,7 +36,7 @@ Visualization Manager:
       Color: 209; 209; 214
       Enabled: true
       Line Style:
-        Line Width: 0.03
+        Line Width: 0.0299999993
         Value: Lines
       Name: Grid
       Normal Cell Count: 0
@@ -50,7 +52,7 @@ Visualization Manager:
       Enabled: true
       Length: 0.25
       Name: Axes
-      Radius: 0.05
+      Radius: 0.0500000007
       Reference Frame: odom
       Value: true
     - Alpha: 1
@@ -76,9 +78,10 @@ Visualization Manager:
       Queue Size: 10
       Selectable: true
       Size (Pixels): 3
-      Size (m): 0.05
+      Size (m): 0.0500000007
       Style: Flat Squares
       Topic: /camera/laserscan
+      Unreliable: false
       Use Fixed Frame: true
       Use rainbow: true
       Value: true
@@ -87,38 +90,54 @@ Visualization Manager:
       Class: rviz/Path
       Color: 25; 255; 0
       Enabled: true
+      Line Style: Lines
+      Line Width: 0.0299999993
       Name: Path
+      Offset:
+        X: 0
+        Y: 0
+        Z: 0
       Topic: /move_base/TrajectoryPlannerROS/local_plan
+      Unreliable: false
       Value: true
     - Alpha: 1
       Buffer Length: 1
       Class: rviz/Path
       Color: 85; 255; 255
       Enabled: true
+      Line Style: Lines
+      Line Width: 0.0299999993
       Name: Path
+      Offset:
+        X: 0
+        Y: 0
+        Z: 0
       Topic: /move_base/NavfnROS/plan
+      Unreliable: false
       Value: true
-    - Alpha: 0.7
+    - Alpha: 0.699999988
       Class: rviz/Map
-      Color Scheme: costmap
+      Color Scheme: map
       Draw Behind: true
       Enabled: true
       Name: Map
-      Topic: /move_base/local_costmap/costmap
+      Topic: /grid_map
+      Unreliable: false
       Value: true
     - Alpha: 1
       Axes Length: 1
-      Axes Radius: 0.1
+      Axes Radius: 0.100000001
       Class: rviz/Pose
       Color: 255; 25; 0
       Enabled: true
-      Head Length: 0.3
-      Head Radius: 0.1
+      Head Length: 0.300000012
+      Head Radius: 0.100000001
       Name: Pose
       Shaft Length: 1
-      Shaft Radius: 0.05
+      Shaft Radius: 0.0500000007
       Shape: Arrow
       Topic: /move_base_simple/goal
+      Unreliable: false
       Value: true
     - Alpha: 1
       Class: rviz/Polygon
@@ -126,11 +145,186 @@ Visualization Manager:
       Enabled: true
       Name: Polygon
       Topic: /move_base/local_costmap/obstacles_layer_footprint/footprint_stamped
+      Unreliable: false
+      Value: true
+    - Class: rviz/TF
+      Enabled: true
+      Frame Timeout: 15
+      Frames:
+        All Enabled: true
+        L_forearm_link:
+          Value: true
+        L_frame_tool_link:
+          Value: true
+        L_gripper_up_link:
+          Value: true
+        L_shoulder_fixed_link:
+          Value: true
+        L_shoulder_pan_link:
+          Value: true
+        L_shoulder_tilt_link:
+          Value: true
+        L_upper_arm_link:
+          Value: true
+        R_forearm_link:
+          Value: true
+        R_frame_tool_link:
+          Value: true
+        R_gripper_up_link:
+          Value: true
+        R_shoulder_fixed_link:
+          Value: true
+        R_shoulder_pan_link:
+          Value: true
+        R_shoulder_tilt_link:
+          Value: true
+        R_upper_arm_link:
+          Value: true
+        base_footprint:
+          Value: true
+        base_laser_link:
+          Value: true
+        base_link:
+          Value: true
+        head_l_eye_eyebrow_link:
+          Value: true
+        head_l_eye_link:
+          Value: true
+        head_l_eye_pupil_link:
+          Value: true
+        head_link:
+          Value: true
+        head_r_eye_eyebrow_link:
+          Value: true
+        head_r_eye_link:
+          Value: true
+        head_r_eye_pupil_link:
+          Value: true
+        map:
+          Value: true
+        neck_bracket_link:
+          Value: true
+        neck_pan_link:
+          Value: true
+        neck_tilt_link:
+          Value: true
+        neck_top_frame:
+          Value: true
+        odom:
+          Value: true
+        openni_base_link:
+          Value: true
+        openni_camera_link:
+          Value: true
+        openni_depth_frame:
+          Value: true
+        openni_depth_optical_frame:
+          Value: true
+        openni_rgb_frame:
+          Value: true
+        openni_rgb_optical_frame:
+          Value: true
+        torso_imu_link:
+          Value: true
+        torso_link:
+          Value: true
+        torso_stand_link:
+          Value: true
+        torso_top_frame:
+          Value: true
+        wheelLB_linkWheel_link:
+          Value: true
+        wheelLB_wheel_link:
+          Value: true
+        wheelLF_linkWheel_link:
+          Value: true
+        wheelLF_wheel_link:
+          Value: true
+        wheelRB_linkWheel_link:
+          Value: true
+        wheelRB_wheel_link:
+          Value: true
+        wheelRF_linkWheel_link:
+          Value: true
+        wheelRF_wheel_link:
+          Value: true
+      Marker Scale: 1
+      Name: TF
+      Show Arrows: true
+      Show Axes: true
+      Show Names: true
+      Tree:
+        map:
+          odom:
+            base_footprint:
+              base_link:
+                base_laser_link:
+                  {}
+                torso_link:
+                  L_shoulder_fixed_link:
+                    L_shoulder_pan_link:
+                      L_shoulder_tilt_link:
+                        L_upper_arm_link:
+                          L_forearm_link:
+                            L_frame_tool_link:
+                              {}
+                            L_gripper_up_link:
+                              {}
+                  R_shoulder_fixed_link:
+                    R_shoulder_pan_link:
+                      R_shoulder_tilt_link:
+                        R_upper_arm_link:
+                          R_forearm_link:
+                            R_frame_tool_link:
+                              {}
+                            R_gripper_up_link:
+                              {}
+                  torso_top_frame:
+                    neck_pan_link:
+                      neck_tilt_link:
+                        neck_bracket_link:
+                          neck_top_frame:
+                            head_link:
+                              head_l_eye_link:
+                                head_l_eye_eyebrow_link:
+                                  {}
+                                head_l_eye_pupil_link:
+                                  {}
+                              head_r_eye_link:
+                                head_r_eye_eyebrow_link:
+                                  {}
+                                head_r_eye_pupil_link:
+                                  {}
+                              openni_base_link:
+                                openni_camera_link:
+                                  openni_depth_frame:
+                                    openni_depth_optical_frame:
+                                      {}
+                                    openni_rgb_frame:
+                                      openni_rgb_optical_frame:
+                                        {}
+                    torso_imu_link:
+                      {}
+                torso_stand_link:
+                  {}
+                wheelLB_linkWheel_link:
+                  wheelLB_wheel_link:
+                    {}
+                wheelLF_linkWheel_link:
+                  wheelLF_wheel_link:
+                    {}
+                wheelRB_linkWheel_link:
+                  wheelRB_wheel_link:
+                    {}
+                wheelRF_linkWheel_link:
+                  wheelRF_wheel_link:
+                    {}
+      Update Interval: 0
       Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
-    Fixed Frame: odom
+    Fixed Frame: map
     Frame Rate: 30
   Name: root
   Tools:
@@ -150,28 +344,28 @@ Visualization Manager:
   Value: true
   Views:
     Current:
-      Angle: 1.57
+      Angle: 3.84000397
       Class: rviz/TopDownOrtho
       Enable Stereo Rendering:
-        Stereo Eye Separation: 0.06
+        Stereo Eye Separation: 0.0599999987
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Name: Current View
-      Near Clip Distance: 0.01
-      Scale: 31.0585
+      Near Clip Distance: 0.00999999978
+      Scale: 26.9379063
       Target Frame: <Fixed Frame>
       Value: TopDownOrtho (rviz)
-      X: 1.19122
-      Y: -0.0975406
+      X: 8.40899658
+      Y: -11.8231316
     Saved: ~
 Window Geometry:
   Displays:
     collapsed: false
-  Height: 970
+  Height: 818
   Hide Left Dock: false
-  Hide Right Dock: false
-  QMainWindow State: 000000ff00000000fd00000004000000000000013c00000340fc0200000008fb0000001200530065006c0065006300740069006f006e00000001e10000009b0000006400fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073010000002800000340000000dd00fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261000000010000010f00000340fc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073010000002800000340000000b000fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e100000197000000030000059c0000003efc0100000002fb0000000800540069006d006501000000000000059c000002f600fffffffb0000000800540069006d00650100000000000004500000000000000000000003450000034000000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  Hide Right Dock: true
+  QMainWindow State: 000000ff00000000fd00000004000000000000016a0000028ffc0200000008fb0000001200530065006c0065006300740069006f006e00000001e10000009b0000006400fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c00610079007301000000410000028f000000dd00fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261000000010000010f0000028ffc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a0056006900650077007300000000410000028f000000b000fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000003ac0000003efc0100000002fb0000000800540069006d00650100000000000003ac0000030000fffffffb0000000800540069006d006501000000000000045000000000000000000000023c0000028f00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Selection:
     collapsed: false
   Time:
@@ -179,7 +373,7 @@ Window Geometry:
   Tool Properties:
     collapsed: false
   Views:
-    collapsed: false
-  Width: 1436
-  X: 254
-  Y: 14
+    collapsed: true
+  Width: 940
+  X: 34
+  Y: 86

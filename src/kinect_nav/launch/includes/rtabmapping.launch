@@ -11,7 +11,7 @@
     <arg name="rgb_camera_info" />
     <arg name="depth_image" />
     <arg name="depth_camera_info" />
-    <arg name="base_link" />
+    <arg name="rtabmap_frame_id" />
     <arg name="laserscan_topic" />
     <arg name="database_path" />
 
@@ -33,7 +33,7 @@
     <!-- ********************************************************************* -->
     <!-- SLAM : https://github.com/introlab/rtabmap_ros/blob/master/launch/rtabmap.launch -->
     <node name="rtabmap" pkg="rtabmap_ros" type="rtabmap" output="screen" args="$(arg rtabmap_args)">
-        <param name="frame_id" type="string" value="$(arg base_link)"/>
+        <param name="frame_id" type="string" value="$(arg rtabmap_frame_id)"/> <!-- The frame attached to the mobile base. -->
 
         <param name="subscribe_depth" type="bool" value="true"/>
         <param name="subscribe_scan" type="bool" value="true"/>
@@ -50,13 +50,12 @@
         <param name="database_path" value="$(arg database_path)"/>
 
         <!-- localization mode -->
-        <param name="Mem/IncrementalMemory" type="string" value="true"/>
-        <!--<param     if="$(arg localization)" name="Mem/IncrementalMemory" type="string" value="false"/>-->
-        <!--<param unless="$(arg localization)" name="Mem/IncrementalMemory" type="string" value="true"/>-->
-        <!--<param name="Mem/InitWMWithAllNodes" type="string" value="$(arg localization)"/>-->
+        <param     if="$(arg localization)" name="Mem/IncrementalMemory" type="string" value="false"/>
+        <param unless="$(arg localization)" name="Mem/IncrementalMemory" type="string" value="true"/>
+        <param name="Mem/InitWMWithAllNodes" type="string" value="$(arg localization)"/>
 
         <!-- RTAB-Map's parameters -->
-        <param name="RGBD/ProximityBySpace"     type="string" value="false"/>
+        <param name="RGBD/ProximityBySpace"     type="string" value="true"/>
         <param name="RGBD/AngularUpdate"        type="string" value="0.01"/>
         <param name="RGBD/LinearUpdate"         type="string" value="0.01"/>
         <param name="RGBD/OptimizeFromGraphEnd" type="string" value="false"/>

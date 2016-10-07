@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!--
+    Launch file to start all
+-->
+<launch>
+
+    <arg name="localization" default="false"/>
+
+    <!-- Setup default topic names from Kinect:  -->
+    <arg name="rgb_image" default="/data_throttled_image_relay"/>
+    <arg name="rgb_camera_info" default="/data_throttled_camera_info"/>
+    <arg name="depth_image" default="/data_throttled_image_depth_relay"/>
+    <arg name="depth_camera_info" default="/data_throttled_camera_info"/>
+    <arg name="base_kinect_link" default="openni_base_link" />
+    <arg name="laserscan_topic" default="/camera/laserscan"/>
+    <arg name="laserscan_frame" default="openni_camera_link"/>
+    <arg name="rtabmap_frame_id" default="base_footprint"/>
+
+
+    <!-- ********************************************************************* -->
+    <!-- Start kinect sensor  -->
+    <!-- ********************************************************************* -->
+    <include file="$(find kinect_nav)/launch_rosbag/_configuration.launch">
+    </include>
+
+    <!-- ********************************************************************* -->
+    <!--  Start move_base  -->
+    <!-- ********************************************************************* -->
+    <include file="$(find kinect_nav)/launch/includes/move_base.launch">
+        <arg name="laserscan_topic" value="$(arg laserscan_topic)"/>
+        <arg name="laserscan_frame" value="$(arg base_kinect_link)"/>
+    </include>
+
+    <!-- ********************************************************************* -->
+    <!--  Start rviz  -->
+    <!-- ********************************************************************* -->
+    <node unless="$(arg localization)" name="rviz" pkg="rviz" type="rviz" args="-d $(find kinect_nav)/launch/includes/navigation.rviz"/>
+
+</launch>

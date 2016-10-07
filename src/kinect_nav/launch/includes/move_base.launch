@@ -1,10 +1,10 @@
 <launch>
 
-    <!--<arg name="laserscan_frame" />-->
-    <!--<arg name="laserscan_topic" />-->
-    <!--<arg name="depth_points" />-->
-    <!--<arg name="depth_points_frame" />-->
-    <!--<arg name="base_kinect_link" /> -->
+    <arg name="global_frame" default="odom"/>
+    <arg name="robot_base_frame" default="base_link"/>
+    <arg name="laserscan_frame" />
+    <arg name="laserscan_topic" />
+    <arg name="base_kinect_link" />
 
     <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
 
@@ -19,12 +19,16 @@
 
         <param name="base_global_planner" type="string" value="navfn/NavfnROS" />
         <param name="base_local_planner" value="base_local_planner/TrajectoryPlannerROS"/>
+        
+        <param name="local_costmap/global_frame" value="$(arg global_frame)"/>
+        <param name="local_costmap/robot_base_frame" value="$(arg robot_base_frame)"/>
+        <param name="global_costmap/global_frame" value="$(arg global_frame)"/>
+        <param name="global_costmap/robot_base_frame" value="$(arg robot_base_frame)"/>
 
-        <!--<param name="base_frame" value="$(arg base_kinect_link)"/>-->
-        <!--<param name="global_costmap/scan_frame" value="$(arg laserscan_frame)"/>-->
-        <!--<param name="local_costmap/laser_scan/scan_frame" value="$(arg laserscan_frame)"/>-->
-        <!--<remap from="global_costmap/scan" to="$(arg laserscan_topic)"/>-->
-        <!--<remap from="local_costmap/scan" to="$(arg laserscan_topic)"/>-->
+        <param name="global_costmap/obstacles_layer/scan/sensor_frame" value="$(arg laserscan_frame)"/>
+        <param name="local_costmap/obstacles_layer/scan/sensor_frame" value="$(arg laserscan_frame)"/>
+        <param name="global_costmap/obstacles_layer/scan/topic" value="$(arg laserscan_topic)"/>
+        <param name="local_costmap/obstacles_layer/scan/topic" value="$(arg laserscan_topic)"/>
 
     </node>
 

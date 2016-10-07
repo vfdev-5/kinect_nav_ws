@@ -4,25 +4,26 @@
 -->
 <launch>
 
-    <arg name="localization" value="true"/>
+    <arg name="conf_file" default="$(find kinect_nav)/launch/includes/configuration.launch"/>
+    <arg name="localization" default="true"/>
 
     <!-- Setup default topic names from Kinect:  -->
-    <arg name="camera_name" value="camera"/>
-    <arg name="rgb_image" value="/$(arg camera_name)/rgb/image_rect_color"/>
-    <arg name="rgb_camera_info" value="/$(arg camera_name)/rgb/camera_info"/>
-    <arg name="depth_image" value="/$(arg camera_name)/depth_registered/image_raw"/>
-    <arg name="depth_camera_info" value="/$(arg camera_name)/depth_registered/camera_info"/>
-    <arg name="base_kinect_link" value="$(arg camera_name)_link" /> <!-- tf coordinate system name from Kinect -->
-    <arg name="laserscan_topic" value="/$(arg camera_name)/laserscan"/>
-    <arg name="laserscan_frame" value="$(arg base_kinect_link)"/>
-    <arg name="depth_points" value="/$(arg camera_name)/depths/points"/>
-    <arg name="depth_points_frame" value="/$(arg camera_name)_depth_frame"/>
-
+    <arg name="camera_name" default="camera"/>
+    <arg name="rgb_image" default="/$(arg camera_name)/rgb/image_rect_color"/>
+    <arg name="rgb_camera_info" default="/$(arg camera_name)/rgb/camera_info"/>
+    <arg name="depth_image" default="/$(arg camera_name)/depth_registered/image_raw"/>
+    <arg name="depth_camera_info" default="/$(arg camera_name)/depth_registered/camera_info"/>
+    <arg name="base_kinect_link" default="$(arg camera_name)_link" /> <!-- tf coordinate system name from Kinect -->
+    <arg name="laserscan_topic" default="/$(arg camera_name)/laserscan"/>
+    <arg name="laserscan_frame" default="$(arg base_kinect_link)"/>
+    <arg name="depth_points" default="/$(arg camera_name)/depths/points"/>
+    <arg name="depth_points_frame" default="/$(arg camera_name)_depth_frame"/>
+    <arg name="rtabmap_frame_id" value="base_footprint" />
 
     <!-- ********************************************************************* -->
     <!--  Start sensors  -->
     <!-- ********************************************************************* -->
-    <include file="$(find kinect_nav)/launch/includes/configuration.launch">
+    <include file="$(arg conf_file)">
         <arg name="rgb_image" value="$(arg rgb_image)"/>
         <arg name="rgb_camera_info" value="$(arg rgb_camera_info)"/>
         <arg name="depth_image" value="$(arg depth_image)"/>
@@ -40,7 +41,7 @@
         <arg name="rgb_camera_info" value="$(arg rgb_camera_info)"/>
         <arg name="depth_image" value="$(arg depth_image)"/>
         <arg name="depth_camera_info" value="$(arg depth_camera_info)"/>
-        <arg name="base_link" value="$(arg base_kinect_link)" />
+        <arg name="rtabmap_frame_id" value="$(arg rtabmap_frame_id)" />
         <arg name="laserscan_topic" value="$(arg laserscan_topic)"/>
         <arg name="database_path" value="$(find kinect_nav)/maps/_map.db"/>
     </include>

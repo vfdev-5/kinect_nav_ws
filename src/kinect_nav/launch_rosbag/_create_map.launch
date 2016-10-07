@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<!--
+    Launch file to start all
+-->
+<launch>
+
+    <arg name="localization" default="true"/>
+
+    <!-- Setup default topic names from Kinect:  -->
+    <arg name="rgb_image" default="/data_throttled_image_relay"/>
+    <arg name="rgb_camera_info" default="/data_throttled_camera_info"/>
+    <arg name="depth_image" default="/data_throttled_image_depth_relay"/>
+    <arg name="depth_camera_info" default="/data_throttled_camera_info"/>
+    <arg name="base_kinect_link" default="openni_base_link" />
+    <arg name="laserscan_topic" default="/camera/laserscan"/>
+    <arg name="laserscan_frame" default="openni_camera_link"/>
+    <arg name="rtabmap_frame_id" default="base_footprint"/>
+
+
+    <!-- Transformation between map and odom -->
+	<node name="map_to_odom_tf"
+		pkg="tf" 
+		type="static_transform_publisher" 
+		args="0.0 0.0 0.0 0.0 0.0 0.0 1.0 map odom 20" />
+
+
+    <!-- ********************************************************************* -->
+    <!-- Start kinect sensor  -->
+    <!-- ********************************************************************* -->
+    <include file="$(find kinect_nav)/launch_rosbag/_configuration.launch">
+    </include>
+
+    <!-- ********************************************************************* -->
+    <!--  Start mapping  -->
+    <!-- ********************************************************************* -->
+    <include file="$(find kinect_nav)/launch/includes/rtabmapping.launch">
+        <arg name="localization" value="$(arg localization)"/>
+        <arg name="rgb_image" value="$(arg rgb_image)"/>
+        <arg name="rgb_camera_info" value="$(arg rgb_camera_info)"/>
+        <arg name="depth_image" value="$(arg depth_image)"/>
+        <arg name="depth_camera_info" value="$(arg depth_camera_info)"/>
+        <arg name="rtabmap_frame_id" value="$(arg rtabmap_frame_id)" />
+        <arg name="laserscan_topic" value="$(arg laserscan_topic)"/>
+        <arg name="database_path" value="$(find kinect_nav)/maps/_map.db"/>
+    </include>
+
+    <!-- ********************************************************************* -->
+    <!--  Start rviz  -->
+    <!-- ********************************************************************* -->
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find kinect_nav)/launch/includes/mapping.rviz"/>
+
+</launch>
