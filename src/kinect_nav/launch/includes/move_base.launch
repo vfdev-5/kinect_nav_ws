@@ -4,7 +4,6 @@
     <arg name="robot_base_frame" default="base_link"/>
     <arg name="laserscan_frame" />
     <arg name="laserscan_topic" />
-    <arg name="base_kinect_link" />
 
     <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
 

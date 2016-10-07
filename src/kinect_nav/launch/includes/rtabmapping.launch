@@ -14,6 +14,7 @@
     <arg name="rtabmap_frame_id" />
     <arg name="laserscan_topic" />
     <arg name="database_path" />
+    <arg name="delete_db" default="false"/>
 
 
     <!-- Choose rtabmap arguments: -->
@@ -24,8 +25,8 @@
 
     <arg if="$(arg debug)" name="rtabmap_args_debug"  default="--udebug"/>
     <arg unless="$(arg debug)" name="rtabmap_args_debug"  default=""/>
-    <arg if="$(arg localization)" name="rtabmap_args_del_db"  default=""/>
-    <arg unless="$(arg localization)" name="rtabmap_args_del_db"  default="--delete_db_on_start"/>
+    <arg if="$(arg delete_db)" name="rtabmap_args_del_db"  default="--delete_db_on_start"/>
+    <arg unless="$(arg delete_db)" name="rtabmap_args_del_db"  default=""/>
     <arg name="rtabmap_args" value="$(arg rtabmap_args_debug) $(arg rtabmap_args_del_db)"/>
 
     <!-- ********************************************************************* -->
@@ -34,6 +35,8 @@
     <!-- SLAM : https://github.com/introlab/rtabmap_ros/blob/master/launch/rtabmap.launch -->
     <node name="rtabmap" pkg="rtabmap_ros" type="rtabmap" output="screen" args="$(arg rtabmap_args)">
         <param name="frame_id" type="string" value="$(arg rtabmap_frame_id)"/> <!-- The frame attached to the mobile base. -->
+        <param name="wait_for_transform" type="bool" value="true"/>
+        <param name="wait_for_transform_duration" type="double" value="0.5"/>
 
         <param name="subscribe_depth" type="bool" value="true"/>
         <param name="subscribe_scan" type="bool" value="true"/>
@@ -48,6 +51,10 @@
         <param name="queue_size" type="int" value="10"/>
 
         <param name="database_path" value="$(arg database_path)"/>
+
+        <!--See http://wiki.ros.org/rtabmap_ros/Tutorials/Advanced%20Parameter%20Tuning-->
+        <param name="Rtabmap/StartNewMapOnLoopClosure" value="true"/>
+        <param name="Odom/ResetCountdown"              value="5" />
 
         <!-- localization mode -->
         <param     if="$(arg localization)" name="Mem/IncrementalMemory" type="string" value="false"/>

@@ -18,7 +18,7 @@
     <arg name="laserscan_frame" default="$(arg base_kinect_link)"/>
     <arg name="depth_points" default="/$(arg camera_name)/depths/points"/>
     <arg name="depth_points_frame" default="/$(arg camera_name)_depth_frame"/>
-    <arg name="rtabmap_frame_id" value="base_footprint" />
+    <arg name="rtabmap_frame_id" value="$(arg base_kinect_link)" />
 
     <!-- ********************************************************************* -->
     <!--  Start sensors  -->
@@ -49,18 +49,32 @@
     <!-- ********************************************************************* -->
     <!--  Start move_base  -->
     <!-- ********************************************************************* -->
-    <!--<include if="$(arg localization)" file="$(find kinect_nav)/launch/includes/move_base.launch">-->
-        <!--<arg name="laserscan_topic" value="$(arg laserscan_topic)"/>-->
-        <!--<arg name="laserscan_frame" value="$(arg base_kinect_link)" />-->
-        <!--<arg name="depth_points" value="$(arg depth_points)"/>-->
-        <!--<arg name="depth_points_frame" value="$(arg depth_points_frame)"/>-->
-        <!--<arg name="base_kinect_link" value="$(arg base_kinect_link)" /> &lt;!&ndash; tf coordinate system name from Kinect &ndash;&gt;-->
-    <!--</include>-->
+    <include file="$(find kinect_nav)/launch/includes/move_base.launch">
+        <arg name="laserscan_topic" value="$(arg laserscan_topic)"/>
+        <arg name="laserscan_frame" value="$(arg laserscan_frame)"/>
+        <arg name="robot_base_frame" value="$(arg base_kinect_link)"/>
+    </include>
 
     <!-- ********************************************************************* -->
     <!--  Start rviz  -->
     <!-- ********************************************************************* -->
-    <node if="$(arg localization)" name="rviz" pkg="rviz" type="rviz" args="-d $(find kinect_nav)/includes/navigation.rviz " />
-    <node unless="$(arg localization)" name="rviz" pkg="rviz" type="rviz" args="-d $(find kinect_nav)/includes/mapping.rviz " />
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find kinect_nav)/launch/includes/navigation.rviz ">
+        <!--remap from="/rtabmap/get_map" to="/get_map"/-->
+        <!--remap from="/rtabmap/get_map_data" to="/get_map_data"/-->
+    </node>
+
+    <!-- visualization with rtabmapviz -->
+    <!--<node pkg="rtabmap_ros" type="rtabmapviz" name="rtabmapviz" args="-d $(find rtabmap_ros)/launch/config/rgbd_gui.ini" output="screen">-->
+        <!--<param name="subscribe_depth"             type="bool" value="true"/>-->
+        <!--<param name="subscribe_scan"              type="bool" value="true"/>-->
+        <!--<param name="frame_id"                    type="string" value="$(arg rtabmap_frame_id)"/>-->
+
+        <!--<remap from="rgb/image"       to="$(arg rgb_image)"/>-->
+        <!--<remap from="depth/image"     to="$(arg depth_image)"/>-->
+        <!--<remap from="rgb/camera_info" to="$(arg rgb_camera_info)"/>-->
+        <!--<remap from="scan"            to="$(arg laserscan_topic)"/>-->
+    <!--</node>-->
+
+
 
 </launch>
