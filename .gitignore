@@ -3,7 +3,7 @@
 
 # Custom 
 temp
-_rtabmap*
+_map*.db
 
 ### C++ ###
 # Prerequisites
